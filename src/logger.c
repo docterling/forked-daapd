@@ -38,7 +38,7 @@
 #include "conffile.h"
 #include "misc.h"
 
-#define LOGGER_REPEAT_MAX 15
+#define LOGGER_REPEAT_MAX 5
 
 /* We need our own check to avoid nested locking or recursive calls */
 #define LOGGER_CHECK_ERR(f) \
@@ -125,8 +125,8 @@ vlogger_writer(int severity, int domain, const char *fmt, va_list args)
     strcpy(content, "(LOGGING SKIPPED - invalid content)\n");
   va_end(ap);
 
-  // On debug and spam levels we don't suppress repeating log messages
-  if (severity < E_DBG)
+  // On spam level we don't suppress repeating log messages
+  if (severity < E_SPAM)
     {
       ret = repeat_count(content);
       if (ret == LOGGER_REPEAT_MAX)
